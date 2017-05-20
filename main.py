@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 #-------------------------------------------------------------------------------
 # Name:        Object bounding box label tool
 # Purpose:     Label object bboxes for ImageNet Detection data
@@ -130,7 +131,9 @@ class LabelTool():
 ##            tkMessageBox.showerror("Error!", message = "The specified dir doesn't exist!")
 ##            return
         # get image list
+        
         self.imageDir = os.path.join(r'./Images', '%03d' %(self.category))
+       
         self.imageList = glob.glob(os.path.join(self.imageDir, '*.JPEG'))
         if len(self.imageList) == 0:
             print 'No .JPEG images found in the specified dir!'
@@ -139,14 +142,14 @@ class LabelTool():
         # default to the 1st image in the collection
         self.cur = 1
         self.total = len(self.imageList)
-
+        print("total ",self.total)
          # set up output dir
         self.outDir = os.path.join(r'./Labels', '%03d' %(self.category))
         if not os.path.exists(self.outDir):
             os.mkdir(self.outDir)
 
         # load example bboxes
-        self.egDir = os.path.join(r'./Examples', '%03d' %(self.category))
+        self.egDir = os.path.join(r'./Examples', '%03d' %(1))
         if not os.path.exists(self.egDir):
             return
         filelist = glob.glob(os.path.join(self.egDir, '*.JPEG'))
@@ -199,7 +202,7 @@ class LabelTool():
                     self.listbox.itemconfig(len(self.bboxIdList) - 1, fg = COLORS[(len(self.bboxIdList) - 1) % len(COLORS)])
 
     def saveImage(self):
-        with open(self.labelfilename, 'w') as f:
+        with open(r"%s" %(self.labelfilename), 'w') as f:
             f.write('%d\n' %len(self.bboxList))
             for bbox in self.bboxList:
                 f.write(' '.join(map(str, bbox)) + '\n')
