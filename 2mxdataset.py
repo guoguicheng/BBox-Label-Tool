@@ -4,6 +4,7 @@ import json,os
 import xml.dom.minidom
 import random
 import shutil
+import argparse
 Gimagelist=[]
 def loadClass():
     with open('classify.json', 'r') as f:
@@ -160,12 +161,16 @@ def createImageSets():
             fpval.write(os.path.splitext(line)[0]+'\n')
  
 def main():
+    parser = argparse.ArgumentParser(description='train an image classifer on imagenet')
+    parser.add_argument('--ext', type=str, default='.JPEG',help='[.jpg|.png|...]')
+    args = parser.parse_args()
+    imgExt=args.ext
     classList=loadClass()
     print(classList)
     for cla in classList:
         print cla
-        imglist = getImages(cla,extArr=['.JPEG'])
-        print imglist
+        imglist = getImages(cla,extArr=[imgExt])
+        #print imglist
         writeXML(cla,classList[cla],imglist)
     createImageSets()
 if __name__=="__main__":

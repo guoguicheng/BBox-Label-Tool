@@ -14,6 +14,7 @@ from PIL import Image, ImageTk
 import os
 import glob
 import random
+import argparse
 
 # colors for the bboxes
 COLORS = ['red', 'blue', 'yellow', 'pink', 'cyan', 'green', 'black']
@@ -21,7 +22,7 @@ COLORS = ['red', 'blue', 'yellow', 'pink', 'cyan', 'green', 'black']
 SIZE = 256, 256
 
 class LabelTool():
-    def __init__(self, master):
+    def __init__(self, master, imgExt):
         # set up the main frame
         self.parent = master
         self.parent.title("LabelTool")
@@ -53,7 +54,7 @@ class LabelTool():
         self.bboxList = []
         self.hl = None
         self.vl = None
-
+        self.imgExt=imgExt
         # ----------------- GUI stuff ---------------------
         # dir entry & load
         self.label = Label(self.frame, text = "Image Dir:")
@@ -134,9 +135,9 @@ class LabelTool():
         
         self.imageDir = os.path.join(r'./Images', '%03d' %(self.category))
        
-        self.imageList = glob.glob(os.path.join(self.imageDir, '*.JPEG'))
+        self.imageList = glob.glob(os.path.join(self.imageDir, self.imgExt))
         if len(self.imageList) == 0:
-            print 'No .JPEG images found in the specified dir!'
+            print 'No %s images found in the specified dir!' %(self.imgExt)
             return
 
         # default to the 1st image in the collection
@@ -152,7 +153,7 @@ class LabelTool():
         self.egDir = os.path.join(r'./Examples', '%03d' %(1))
         if not os.path.exists(self.egDir):
             return
-        filelist = glob.glob(os.path.join(self.egDir, '*.JPEG'))
+        filelist = glob.glob(os.path.join(self.egDir, "*.JPEG"))
         self.tmp = []
         self.egList = []
         random.shuffle(filelist)
@@ -290,7 +291,11 @@ class LabelTool():
 ##        self.mainPanel.create_image(0, 0, image = self.tkimg, anchor=NW)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='train an image classifer on imagenet')
+    parser.add_argument('--ext', type=str, default='*.JPEG',help='[*.jpg|*.png|...]')
+    args = parser.parse_args()
+    imgExt=args.ext
     root = Tk()
-    tool = LabelTool(root)
+    tool = LabelTool(root,imgExt)
     root.resizable(width =  True, height = True)
     root.mainloop()
