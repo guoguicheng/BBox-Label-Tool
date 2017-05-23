@@ -292,9 +292,9 @@ class LabelTool():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train an image classifer on imagenet')
-    parser.add_argument('--ext', type=str, default='*.JPEG',help='[*.jpg|*.png|...]')
+    parser.add_argument('--ext', type=str, default='.JPEG',help='[.jpg|.png|...]')
     args = parser.parse_args()
-    imgExt=args.ext
+    imgExt="*"+args.ext
     root = Tk()
     tool = LabelTool(root,imgExt)
     root.resizable(width =  True, height = True)
